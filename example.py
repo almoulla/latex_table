@@ -1,9 +1,12 @@
 """
-Example
+AUTHOR : Khaled Al Moulla
+DATE   : 2022-01-01
+
+Example of latex_table.py
 """
 
 #%%
-### MODULE
+### MODULES
 
 import numpy       as     np
 from   numpy       import nan
@@ -35,6 +38,7 @@ values = np.array([
 #%%
 ### LATEX TABLE
 
-lt = latex_table(labels, values, sort_column=1, error='unequal', error_suffix=[' err_u', ' err_l'])
-print('\\usepackage{siunitx}')
-print(lt)
+table = latex_table(labels, values, sort_column=1, error='unequal', error_suffix=[' err_u',' err_l'])
+print('Requirements:')
+print('\\usepackage{siunitx}\n')
+print(table)

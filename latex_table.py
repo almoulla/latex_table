@@ -218,5 +218,3 @@ def latex_table(labels, values, caption='', sort_column=0, sort_type='increasing
 
     # Return
     return lt
-
-#%%
