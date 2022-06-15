@@ -2,7 +2,7 @@
 AUTHOR : Khaled Al Moulla
 DATE   : 2022-01-01
 
-LaTeX Table.
+LaTeX Table
 """
 
 #%%
