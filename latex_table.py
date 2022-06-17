@@ -2,7 +2,7 @@
 AUTHOR : Khaled Al Moulla
 DATE   : 2022-01-01
 
-LaTeX Table
+LaTeX Table.
 """
 
 #%%
@@ -14,15 +14,21 @@ import pandas as pd
 #%%
 ### FUNCTION
 
-def latex_table(labels, values, caption='', sort_column=0, sort_type='increasing', nan_replace='-', error=None, error_suffix=None, align=True, two_column=True):
-
-    # Function for jumping error columns
-    def i_next(i):
-        if error=='equal'  : return i+2
-        if error=='unequal': return i+3
+def latex_table(values, labels=None, caption='', sort_column=0, sort_type='increasing', nan_replace='-', error=None, error_suffix=None, align=True, two_column=True):
 
     # Nr. of rows and columns
     Nrow, Ncol = values.shape
+
+    # Check if values data type is NumPy or Pandas
+    if isinstance(values, np.ndarray) & (labels is None):
+        return print('Labels missing')
+    if isinstance(values, pd.DataFrame):
+        values_copy = values.copy(deep=True)
+        values      = np.zeros(values.shape, dtype='U32')
+        for i in range(Ncol):
+            values[:,i] = values_copy.iloc[:,i]
+        if labels is None:
+            labels = list(values_copy.columns)
 
     # NaN replacement
     nan_rep = '{'+nan_replace+'}'
@@ -49,6 +55,11 @@ def latex_table(labels, values, caption='', sort_column=0, sort_type='increasing
         if error=='unequal':
             if (labels[i]+error_suffix[0] in labels) & (labels[i]+error_suffix[1] in labels):
                 err_idx.append(i)
+
+    # Function for jumping error columns
+    def i_next(i):
+        if error=='equal'  : return i+2
+        if error=='unequal': return i+3
 
     # DataFrame: Input
     df0 = pd.DataFrame()
@@ -190,8 +201,7 @@ def latex_table(labels, values, caption='', sort_column=0, sort_type='increasing
                 column_format += ' r@{\extracolsep{0pt}}@{$\,$}c@{$\,$}@{\extracolsep{0pt}}l'
             i = i_next(i)-1
         i += 1
-    column_format = column_format.split()
-    column_format = ' @{\extracolsep{\\fill}} '.join(column_format)
+    column_format = ' @{\extracolsep{\\fill}} '.join(column_format.split())
 
     # LaTeX table: Make
     lt = df.to_latex(index=False,
@@ -216,5 +226,5 @@ def latex_table(labels, values, caption='', sort_column=0, sort_type='increasing
             k = len(replace[i][0])
             lt = lt[:j] + replace[i][1] + lt[j+k:]
 
-    # Return
+    # Return LaTeX table
     return lt
