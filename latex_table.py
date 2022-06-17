@@ -21,7 +21,7 @@ def latex_table(values, labels=None, caption='', sort_column=0, sort_type='incre
 
     # Check if values data type is NumPy or Pandas
     if isinstance(values, np.ndarray) & (labels is None):
-        return print('Labels missing')
+        return print('Labels missing!')
     if isinstance(values, pd.DataFrame):
         values_copy = values.copy(deep=True)
         values      = np.zeros(values.shape, dtype='U32')
