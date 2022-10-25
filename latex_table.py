@@ -14,7 +14,7 @@ import pandas as pd
 #%%
 ### FUNCTION
 
-def latex_table(values, labels=None, caption='', sort_column=0, sort_type='increasing', nan_replace='-', error=None, error_suffix=None, align=True, two_column=True):
+def latex_table(values, labels=None, caption='', sort_column=0, sort_type='increasing', nan_replace='', error=None, error_suffix=None, align=True, two_column=True):
 
     # Nr. of rows and columns
     Nrow, Ncol = values.shape
@@ -31,7 +31,10 @@ def latex_table(values, labels=None, caption='', sort_column=0, sort_type='incre
             labels = list(values_copy.columns)
 
     # NaN replacement
-    nan_rep = '{'+nan_replace+'}'
+    if nan_replace == '':
+        nan_rep = nan_replace
+    else:
+        nan_rep = '{'+nan_replace+'}'
 
     # Error suffix
     if (error == 'equal'  ) & (error_suffix is None):
@@ -67,7 +70,10 @@ def latex_table(values, labels=None, caption='', sort_column=0, sort_type='incre
         df0[labels[i]] = values[:,i].astype(str)
 
     # DataFrame: Sort
-    sort_idx = np.argsort(np.array(df0.iloc[:,sort_column]))
+    if sort_column in var_idx:
+        sort_idx = np.argsort(np.array(df0.iloc[:,sort_column], dtype='float'))
+    else:
+        sort_idx = np.argsort(np.array(df0.iloc[:,sort_column]))
     if sort_type == 'increasing': sort_idx = sort_idx
     if sort_type == 'decreasing': sort_idx = sort_idx[::-1]
     df0 = df0.reindex(sort_idx).reset_index(drop=True)
@@ -98,15 +104,26 @@ def latex_table(values, labels=None, caption='', sort_column=0, sort_type='incre
                 elif error=='equal':
                     sep = '$\pm$'
                     err = df0.iloc[j,i+1]
+                    if err == '':
+                        sep = ''
                 elif error=='unequal':
                     err_u = df0.iloc[j,i+1]
                     err_l = df0.iloc[j,i+2]
                     if err_u == err_l:
                         sep = '$\pm$'
                         err = err_u
+                        if err == '':
+                            sep = ''
                     if err_u != err_l:
-                        sep = '$^{+}_{-}$'
-                        err = '$^{'+err_u+'}_{'+err_l+'}$'
+                        if err_l == '':
+                            sep = '$^{+}$'
+                            err = '$^{'+err_u+'}$'
+                        elif err_u == '':
+                            sep = '$_{-}$'
+                            err = '$_{'+err_l+'}$'
+                        else:
+                            sep = '$^{+}_{-}$'
+                            err = '$^{'+err_u+'}_{'+err_l+'}$'
                 var_list.append(var)
                 sep_list.append(sep)
                 err_list.append(err)
@@ -205,12 +222,12 @@ def latex_table(values, labels=None, caption='', sort_column=0, sort_type='incre
 
     # LaTeX table: Make
     lt = df.to_latex(index=False,
-                        escape=False,
-                        caption=caption,
-                        header=header,
-                        column_format=column_format,
-                        multicolumn=True,
-                        multicolumn_format='c',
+                     escape=False,
+                     caption=caption,
+                     header=header,
+                     column_format=column_format,
+                     multicolumn=True,
+                     multicolumn_format='c',
                     )
 
     # LaTeX table: Edit

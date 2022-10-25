@@ -20,7 +20,7 @@ import pandas      as     pd
 values = np.array([
 ['Star 1', 5000,  25,  25, 4.4 , 0.1  , 0.1  , nan , 'AlMoulla21,AlMoulla22'],
 ['Star 2', 6000,  50,  50, 4.55, 0.01 , nan  ,  0.1, 'AlMoulla22'           ],
-['Star 3', 5500, 100, 100, 4.6 , 0.001, 0.001, -0.1, 'AlMoulla23'           ]
+['Star 3', 5500, nan, nan, 4.6 , 0.001, 0.001, -0.1, 'AlMoulla23'           ]
 ])
 
 # Labels
